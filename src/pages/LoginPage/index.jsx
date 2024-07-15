@@ -1,10 +1,15 @@
 import { useState } from "react";
+// Llamo al hook para redireccionar
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
+
+  // Creo la instancia del hook
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     setFormData({
@@ -37,6 +42,10 @@ const LoginPage = () => {
       const data = await response.json();
       console.log("Datos de registro:", data);
       alert("Acceso correcto");
+      localStorage.setItem("accessToken", data.access);
+      localStorage.setItem("refreshToken", data.refresh);
+      // Redirige a HomePage
+      navigate("/home");
     } catch (error) {
       console.error("Error en el registro:", error);
     }
