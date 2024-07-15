@@ -1,32 +1,52 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    email: '',
-    first_name: '',
-    last_name: ''
+    username: "",
+    password: "",
+    email: "",
+    first_name: "",
+    last_name: "",
   });
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Lógica para enviar datos de registro
-    console.log('Datos de registro:', formData);
+    console.log("Datos de registro:", formData);
+
+    try {
+      // Envía una solicitud POST al endpoint de registro usando fetch
+      const response = await fetch("http://localhost:8000/api/v1/register/", {
+        method: "POST",
+        // Especifica que tipo de datos voy a enviar mi servidor
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error en el registro");
+      }
+
+      const data = await response.json();
+      console.log("Datos de registro:", data);
+      alert("Registo exitoso")
+    } catch (error) {
+      console.error("Error en el registro:", error);
+    }
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-gray-800">
-      <h1 className="text-5xl font-extrabold text-gray-900 mb-8">
-        Registro
-      </h1>
+      <h1 className="text-5xl font-extrabold text-gray-900 mb-8">Registro</h1>
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <form onSubmit={handleSubmit}>
           <div className="mb-4">

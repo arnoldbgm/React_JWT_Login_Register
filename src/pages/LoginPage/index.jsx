@@ -1,22 +1,45 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
-    username: '',
-    password: ''
+    username: "",
+    password: "",
   });
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Lógica para enviar datos de inicio de sesión
-    console.log('Datos de inicio de sesión:', formData);
+    // Lógica para enviar datos de registro
+    console.log("Datos de registro:", formData);
+
+    try {
+      // Envía una solicitud POST al endpoint de registro usando fetch
+      const response = await fetch("http://localhost:8000/api/token/", {
+        method: "POST",
+        // Especifica que tipo de datos voy a enviar mi servidor
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al acceder");
+      }
+
+      const data = await response.json();
+      console.log("Datos de registro:", data);
+      alert("Acceso correcto");
+    } catch (error) {
+      console.error("Error en el registro:", error);
+    }
   };
 
   return (
